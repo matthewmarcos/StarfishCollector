@@ -16,16 +16,5 @@ public class Turtle extends BaseActor {
         loadAnimationFromFiles(fileNames, 0.1f, true);
     }
 
-    public void act(float dt) {
-        super.act(dt);
 
-        if (Gdx.input.isKeyPressed(Keys.LEFT))
-            this.moveBy(-1,0);
-        if (Gdx.input.isKeyPressed(Keys.RIGHT))
-            this.moveBy(1,0);
-        if (Gdx.input.isKeyPressed(Keys.UP))
-            this.moveBy(0,1);
-        if (Gdx.input.isKeyPressed(Keys.DOWN))
-            this.moveBy(0,-1);
-    }
 }
