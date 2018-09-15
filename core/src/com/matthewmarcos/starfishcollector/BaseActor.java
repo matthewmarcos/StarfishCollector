@@ -297,4 +297,30 @@ public class BaseActor extends Actor {
         // reset the acceleration
         accelerationVec.set(0, 0);
     }
+
+    public Vector2 preventOverlap(BaseActor other) {
+        Polygon p1 = this.getBoundaryPolygon();
+        Polygon p2 = other.getBoundaryPolygon();
+
+        Rectangle r1 = p1.getBoundingRectangle();
+        Rectangle r2 = p2.getBoundingRectangle();
+
+        /*
+            Polygon collision requires a lot of computing power so we can just check if the
+            boundary rectangles overlap first. If they don't, we do not need to compute any further
+         */
+        if(!r1.overlaps(r2)) {
+            return null;
+        }
+
+        Intersector.MinimumTranslationVector mtv = new Intersector.MinimumTranslationVector();
+        boolean polygonOverlap = Intersector.overlapConvexPolygons(p1, p2, mtv);
+
+        if(!polygonOverlap) {
+            return null;
+        }
+
+        this.moveBy(mtv.normal.x * mtv.depth, mtv.normal.y * mtv.depth);
+        return mtv.normal;
+    }
 }
