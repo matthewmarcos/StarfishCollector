@@ -1,6 +1,7 @@
 package com.matthewmarcos.starfishcollector;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.graphics.Color;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.net.ResponseCache;
 import java.util.ArrayList;
@@ -382,5 +384,20 @@ public class BaseActor extends Actor {
 
     public static int count(Stage s, String className) {
         return getList(s, className).size();
+    }
+
+    public void alignCamera() {
+        Camera cam = this.getStage().getCamera();
+        Viewport v = this.getStage().getViewport();
+
+        // center Camera on actor
+        cam.position.set(this.getX() + this.getOriginX(), this.getY() + this.getOriginY(), 0);
+
+        // bound camera to layout
+        cam.position.x = MathUtils.clamp(cam.position.x,
+                cam.viewportWidth/2, worldBounds.width - cam.viewportWidth/2);
+        cam.position.y = MathUtils.clamp(cam.position.y,
+                cam.viewportHeight/2, worldBounds.height - cam.viewportHeight/2);
+        cam.update();
     }
 }
