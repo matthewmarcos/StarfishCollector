@@ -20,8 +20,8 @@ import java.util.ArrayList;
 
 public class BaseActor extends Actor {
 
-    private Animation<TextureRegion> animation;
-    private float elapsedTime;
+    protected Animation<TextureRegion> animation;
+    protected float elapsedTime;
     private boolean animationPaused;
     private Vector2 velocityVec;
     private Vector2 accelerationVec;
@@ -177,7 +177,6 @@ public class BaseActor extends Actor {
 
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-
         // Apply the color tint effect
         Color c = getColor();
         batch.setColor(c.r, c.g, c.b, c.a);
@@ -314,6 +313,10 @@ public class BaseActor extends Actor {
         deceleration = dec;
     }
 
+    public float getAcceleration() {
+        return accelerationVec.len();
+    }
+
     public void applyPhysics(float dt) {
         // Apply acceleration
         velocityVec.add(accelerationVec.x * dt, accelerationVec.y * dt);
@@ -321,7 +324,7 @@ public class BaseActor extends Actor {
         float speed = getSpeed();
 
         // decrease speed when not accelerating
-        if(accelerationVec.len() == 0) {
+        if(getAcceleration() == 0) {
             speed -= deceleration * dt;
         }
 

@@ -2,10 +2,10 @@ package com.matthewmarcos.starfishcollector;
 
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
-public class StarfishCollector extends GameBeta {
+public class LevelScreen extends BaseScreen {
     private Turtle turtle;
     private BaseActor ocean;
-    private boolean win;
+    private boolean gameFinished;
 
     public void initialize() {
         ocean = new BaseActor(0, 0, mainStage);
@@ -23,13 +23,35 @@ public class StarfishCollector extends GameBeta {
         new Rock(300, 350, mainStage);
         new Rock(450, 200, mainStage);
 
+        new Shark(200, 20, mainStage);
+
         turtle = new Turtle(20, 20, mainStage);
-        win = false;
+        gameFinished = false;
     }
 
     public void update(float dt) {
         for(BaseActor rock : BaseActor.getList(mainStage, "Rock")) {
             turtle.preventOverlap(rock);
+        }
+
+        for(BaseActor sharkActor : BaseActor.getList(mainStage, "Shark")) {
+            Shark shark = (Shark)sharkActor;
+            if (turtle.overlaps(shark) && !gameFinished) {
+                gameFinished = true;
+
+                Whirlpool w = new Whirlpool(0, 0, mainStage);
+                w.centerAtActor(turtle);
+                w.setOpacity(0.25f);
+
+                BaseActor gameOverMessage = new BaseActor(0, 0, uiStage);
+                gameOverMessage.loadTexture("game-over.png");
+                // TODO: Make a constant for screen width and height
+                gameOverMessage.centerAtPosition(400, 300);
+                gameOverMessage.setOpacity(0);
+                gameOverMessage.addAction(Actions.after(Actions.fadeIn(1)));
+
+                turtle.die();
+            }
         }
 
         for(BaseActor starfishActor : BaseActor.getList(mainStage, "Starfish")) {
@@ -44,8 +66,8 @@ public class StarfishCollector extends GameBeta {
             }
         }
 
-        if(BaseActor.count(mainStage, "Starfish") == 0 && !win) {
-            win = true;
+        if(BaseActor.count(mainStage, "Starfish") == 0 && !gameFinished) {
+            gameFinished = true;
 
             BaseActor youWinMessage = new BaseActor(0, 0, uiStage);
             youWinMessage.loadTexture("you-win.png");
