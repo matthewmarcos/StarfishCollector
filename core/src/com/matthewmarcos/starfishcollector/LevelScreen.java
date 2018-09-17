@@ -1,5 +1,7 @@
 package com.matthewmarcos.starfishcollector;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
 public class LevelScreen extends BaseScreen {
@@ -47,8 +49,10 @@ public class LevelScreen extends BaseScreen {
                 gameOverMessage.loadTexture("game-over.png");
                 // TODO: Make a constant for screen width and height
                 gameOverMessage.centerAtPosition(400, 300);
+                gameOverMessage.moveBy(0, 100);
                 gameOverMessage.setOpacity(0);
                 gameOverMessage.addAction(Actions.after(Actions.fadeIn(1)));
+
 
                 turtle.die();
             }
@@ -73,11 +77,27 @@ public class LevelScreen extends BaseScreen {
             youWinMessage.loadTexture("you-win.png");
             // TODO: Make a constant for screen width and height
             youWinMessage.centerAtPosition(400, 300);
+            youWinMessage.moveBy(0, 100);
             youWinMessage.setOpacity(0);
             youWinMessage.addAction(Actions.after(Actions.fadeIn(1)));
 
         }
 
+        if(gameFinished) {
+
+            BaseActor continueMessage = new BaseActor(0, 0, uiStage);
+            continueMessage.loadTexture("message-continue.png");
+            // TODO: Make a constant for screen width and height
+            continueMessage.centerAtPosition(400, 300);
+            continueMessage.moveBy(0, -100);
+            continueMessage.setOpacity(0);
+            continueMessage.addAction(Actions.after(Actions.fadeIn(1)));
+
+            if(Gdx.input.isKeyPressed(Input.Keys.C)) {
+                StarfishGame.setActiveScreen(new LevelScreen());
+            }
+
+        }
 
     }
 }
