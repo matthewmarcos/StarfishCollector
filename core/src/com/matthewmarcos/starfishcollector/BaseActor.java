@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.net.ResponseCache;
+import java.util.ArrayList;
 
 public class BaseActor extends Actor {
 
@@ -26,11 +27,25 @@ public class BaseActor extends Actor {
     private float maxSpeed;
     private float deceleration;
     private Polygon boundaryPolygon;
+    private String myClass;
+
+    private static Rectangle worldBounds;
+
+    public BaseActor(float x, float y, Stage s, String myClass) {
+        super();
+        // Additional Initialization tasks
+        initialize(x, y, s);
+        this.myClass = myClass;
+    }
 
     public BaseActor(float x, float y, Stage s) {
         super();
-
         // Additional Initialization tasks
+        initialize(x, y, s);
+        this.myClass = "";
+    }
+
+    private void initialize(float x, float y, Stage s) {
         setPosition(x, y);
         s.addActor(this);
 
@@ -43,6 +58,29 @@ public class BaseActor extends Actor {
 
         maxSpeed = 1000;
         deceleration = 0;
+    }
+
+    public static void setWorldBounds(float width, float height) {
+        worldBounds = new Rectangle(0, 0, width, height);
+    }
+
+    public static void setWorldBounds(BaseActor ba) {
+        setWorldBounds(ba.getWidth(), ba.getHeight());
+    }
+
+    public void boundToWorld() {
+        // check left edge
+        if (getX() < 0)
+            setX(0);
+        // check right edge
+        if (getX() + getWidth() > worldBounds.width)
+            setX(worldBounds.width - getWidth());
+        // check bottom edge
+        if (getY() < 0)
+            setY(0);
+        // check top edge
+        if (getY() + getHeight() > worldBounds.height)
+            setY(worldBounds.height - getHeight());
     }
 
     public void setBoundaryRectangle() {
@@ -322,5 +360,27 @@ public class BaseActor extends Actor {
 
         this.moveBy(mtv.normal.x * mtv.depth, mtv.normal.y * mtv.depth);
         return mtv.normal;
+    }
+
+    public String getMyClass() {
+        return this.myClass;
+    }
+
+    public static ArrayList<BaseActor> getList(Stage s, String className) {
+        ArrayList<BaseActor> list = new ArrayList<BaseActor>();
+
+        for(Actor a: s.getActors()) {
+            // Get only the actors that are an instance of className
+            BaseActor actor = (BaseActor)a;
+            if(actor.getMyClass() == className) {
+                list.add(actor);
+            }
+        }
+
+        return list;
+    }
+
+    public static int count(Stage s, String className) {
+        return getList(s, className).size();
     }
 }

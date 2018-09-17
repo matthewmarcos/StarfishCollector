@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class Turtle extends BaseActor {
     public Turtle(float x, float y, Stage s) {
-        super(x, y, s);
+        super(x, y, s, "Turtle");
         int imageCount = 6; // Iterate 1 through 6 for filenames
         String[] fileNames = new String[imageCount];
         for(int i = 0 ; i < imageCount ; i++) {
@@ -22,7 +22,7 @@ public class Turtle extends BaseActor {
     }
 
     public void act(float dt) {
-        super.act( dt );
+        super.act(dt);
         if (Gdx.input.isKeyPressed(Keys.LEFT))
             accelerateAtAngle(180);
         if (Gdx.input.isKeyPressed(Keys.RIGHT))
@@ -36,7 +36,7 @@ public class Turtle extends BaseActor {
         if (getSpeed() > 0)
             setRotation(getMotionAngle());
 
+        boundToWorld();
+
     }
-
-
 }
